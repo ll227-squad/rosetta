@@ -1,0 +1,1 @@
+This subdirectory contains all user-written code pertaining to nspyre used for the Rosetta setup.

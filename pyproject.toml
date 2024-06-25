@@ -1,0 +1,28 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "nspyre-rosetta"
+version = "1.0"
+license = "MIT"
+description = "An nspyre experiment for the Rosetta setup."
+authors = [
+	"Jacob Feder <jacobsfeder@gmail.com>",
+	"C. Washabaugh",
+]
+maintainers = [
+	"Jacob Feder <jacobsfeder@gmail.com>"
+]
+readme = "README.md"
+repository = "https://github.com/cawashab/nspyre_test"
+packages = [{include = "rosetta", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.23"
+nspyre = "^0.6"
+pulsestreamer = "^1.7.0"
+
+[tool.poetry.scripts]
+rosetta = 'rosetta.gui.app:main'
