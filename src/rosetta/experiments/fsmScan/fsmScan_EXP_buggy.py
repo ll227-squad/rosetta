@@ -9,14 +9,12 @@ from nspyre import StreamingList, DataSource, experiment_widget_process_queue
 
 from rosetta.drivers.ni.ni_motionControl import nidaqMotionControl
 from rosetta.insmgr import MyInstrumentManager
-from rpyc.utils.classic import obtain
 
 _HERE = Path(__file__).parent
 _logger = logging.getLogger(__name__)
 
 
-class fsmScanExperiment:
-
+class FSMExperiment:
     def __init__(self, queue_to_exp=None, queue_from_exp=None):
         """
         Args:
@@ -41,13 +39,13 @@ class fsmScanExperiment:
             prefix=Path(__file__).stem,
             file_size=10_000_000,
         )
-        _logger.info('Created fsmExperiment instance.')
+        _logger.info('Created FSMExperiment instance.')
 
     def __exit__(self):
         """Perform experiment teardown."""
-        _logger.info('Destroyed fsmExperiment instance.')
+        _logger.info('Destroyed FSMExperiment instance.')
 
-    def fsmScanMeasurement(self,    center_scan: bool,
+    def FSM2DMeasurement(self,  center_scan: bool,
                                 point1x: float,
                                 point1y: float,
                                 point2x: float,
@@ -61,9 +59,36 @@ class fsmScanExperiment:
                                 autosave: bool, 
                                 autosave_interval: int, 
                                 dataset:str, **kwargs):
-        with MyInstrumentManager() as mgr, DataSource(dataset) as fsm_data:
-            daq = mgr.ni_motionControl
+        '''
+        Perform a 2D scan of an area specified by top left corner initial_point and bottom right corner final_point. Image will be formed with
+        num_pixels_x and num_pixels_y pixels in each respective direction.
 
+        The 2D scan is rastered; that is, the scan will snake from the top left corner to the top right corner, hop down (-y) one pixel and return
+        scanning to the right. This pattern repeats until the end of the raster scan. The data acquired on data_channel will be pushed to the data server
+        every line scan.
+
+        A 2D scan is formed by calling oneD_scan(num_pixels = num_pixels_x) num_pixels_y number of times. Data is collected on each pixel for 
+        1/scan_rate seconds. Data is collected on DAQ channel data_channel (currently configured to only sample digital inputs/TTL pulses) avgs_per_pixel
+        number of times per pixel. The raw counts are then averaged over each pixel and normalized to time.
+
+        This method returns a 2D numpy array that is num_pixels_x by num_pixels_y in size. Each element is the cps (Hz) recorded by the DAQ
+        during the time the FSM dwelled at each pixel.
+
+        This method is essentially the same as twoD_scan in ni_motionControl.py. However, in order to push data to the data server for each line scan,
+        we recreate the twoD_scan method here.
+
+        Arguments:
+                *inital_point: dictionary giving top left corner for the 2D scan (in um),  e.g. {'x': -10, 'y': 10}
+                *final_point: dictionary giving bottom right corner for the 2D scan (in um), e.g. {'x': 10, 'y':-10}
+                *num_pixels_x: number of dwell points for the 2D scan in the x-direction
+                *num_pixels_y: number of dwell points for the 2D scan in the y-direction
+                *scan_rate: rate/dwell time of collection for the 2D scan on each pixel
+                *avgs_per_pixel: for each pixel, read the DAQ this many times and average the result
+                *data_channel: physical DAQ channel that collects data (default: PFI channel for collecting digital pulses)
+        '''
+        
+        with MyInstrumentManager() as mgr, DataSource(dataset) as FSM_data:
+            daq = mgr.ni_motionControl
 
             # Determine scope of scan
             if center_scan == True:
@@ -74,11 +99,6 @@ class fsmScanExperiment:
                 initial_point = {'x': point1x, 'y': point1y}
                 final_point   = {'x': point2x, 'y': point2y}
 
-            # Check/fix types
-            num_pixels_x = int(num_pixels_x)
-            num_pixels_y = int(num_pixels_y)
-            avgs_per_pixel = int(avgs_per_pixel)
-
 
             rates    = np.zeros((num_pixels_y,num_pixels_x))
             x_min    = initial_point['x']
@@ -87,8 +107,8 @@ class fsmScanExperiment:
             y_values = np.linspace(initial_point['y'],final_point['y'],num_pixels_y)
 
             # Generate nice tick labels
-            x_ticks = x_values
-            y_ticks = y_values
+            x_ticks = np.round(x_values,2)
+            y_ticks = np.round(y_values,2)
 
             points_array = []
 
@@ -102,19 +122,18 @@ class fsmScanExperiment:
 
                 # rows going left to right
                 if i % 2 == 0:
-                    print(scan_rate)
-                    print(avgs_per_pixel)
-                    rates_in_row = obtain(daq.oneD_scan(left_point,right_point,num_pixels_x,scan_rate,avgs_per_pixel,data_channel))
+                    print(num_pixels_x)
+                    rates_in_row = daq.oneD_scan(left_point,right_point,num_pixels_x,scan_rate,avgs_per_pixel,data_channel)
 
                 # rows going right to left
                 else:
-                    rates_in_row = obtain(daq.oneD_scan(right_point,left_point,num_pixels_x,scan_rate,avgs_per_pixel,data_channel))
+                    rates_in_row = daq.oneD_scan(right_point,left_point,num_pixels_x,scan_rate,avgs_per_pixel,data_channel)
                     rates_in_row = np.flip(rates_in_row)
 
                 rates[i] = rates_in_row
 
-                # save the current data to the data server
-                fsm_data.push({'params'  :{ 'Dataset Name'          : dataset,
+                        # save the current data to the data server
+                FSM_data.push({'params'  :{ 'Dataset Name'          : dataset,
                                         'Top left corner (um)'      : initial_point,
                                         'Bottom right corner (um)'  : final_point,
                                         'Number of x pixels'        : num_pixels_x,
@@ -129,8 +148,6 @@ class fsmScanExperiment:
                                         'xticks'                    : x_ticks,
                                         'yticks'                    : y_ticks,
                             'datasets':{'points'                    : points_array,
-                                        'x_ticks'                   : x_ticks,
-                                        'y_ticks'                   : y_ticks,
                                         'rates'                     : rates}
                                  })
                 
@@ -141,28 +158,31 @@ class fsmScanExperiment:
             # Save final position
             daq.set_position = final_point
 
-    def fsmMoveMeasurement(self, x_coord:float, y_coord:float):
-        with MyInstrumentManager() as mgr:
+    def testMeasurement(self, dataset):
+        with MyInstrumentManager() as mgr, DataSource(dataset) as FSM_data:
             daq = mgr.ni_motionControl
+            print(daq.get_position())
+            #daq.move({'x': 0, 'y': 2})
+            #return daq.get_position()
 
-            point = {'x':x_coord,'y':y_coord}
-
-            daq.move(point)
 
 if __name__ == '__main__':
-    exp = fsmScanExperiment()
-    exp.fsmScanMeasurement(center_scan = False,
-                       point1x     = -5,
-                       point1y     = 5,
-                       point2x     = 5,
-                       point2y     = -5,
+    exp = FSMExperiment()
+    '''
+    exp.FSM2DMeasurement(center_scan = False,
+                       point1x = -1.0,
+                       point1y = 1.0,
+                       point2x = 1.0,
+                       point2y = -1.0,
                        pixel_resolution = 1,
-                       num_pixels_x = 20,
-                       num_pixels_y = 20,
-                       scan_rate = 50,
+                       num_pixels_x = 10,
+                       num_pixels_y = 10,
+                       scan_rate = 100,
                        avgs_per_pixel = 20,
                        data_channel = 'Dev1/PFI1',
                        autosave = False,
                        autosave_interval = 60,
-                       dataset = 'fsmData'
-                       )
+                       dataset = 'FSMMeasurement')
+    '''
+    exp.testMeasurement('testdataset')
+    

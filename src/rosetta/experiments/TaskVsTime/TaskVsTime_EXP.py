@@ -72,7 +72,8 @@ class taskVsTimeExperiment:
                 current_time = time.time()-self.startTime
 
                 current_counts = daq.readCtrs_single_internalClk(acqRate=rate)
-                for data, countsList in zip(current_counts,self.dataCounts):
+                current_rates = [counts * rate for counts in current_counts]
+                for data, countsList in zip(current_rates,self.dataCounts):
                     countsList.append(data)
 
                 self.times.append(time.time()-self.startTime)

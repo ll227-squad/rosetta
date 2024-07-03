@@ -68,13 +68,20 @@ def main():
                     'Task Vs Time Plot': MainWidgetItem(rosetta.experiments.TaskVsTime.TaskVsTime_GUI, 'FlexLinePlotWidgetWithTVTDefaults', stretch=(1, 1)), 
                     },
 
-                'Optical Power' : {'Power Meter': MainWidgetItem(rosetta.experiments.powerMeter.powerMeter_GUI, 'powerMeterWidget',stretch=(1,1)),
-                                   'Power Meter Plot' : MainWidgetItem(rosetta.experiments.powerMeter.powerMeter_GUI,'FlexLinePlotWidgetWithPVTDefaults',stretch=(1,1))
+                'Optical Power' : {
+                    'Power Meter': MainWidgetItem(rosetta.experiments.powerMeter.powerMeter_GUI, 'powerMeterWidget',stretch=(1,1)),
+                    'Power Meter Plot' : MainWidgetItem(rosetta.experiments.powerMeter.powerMeter_GUI,'FlexLinePlotWidgetWithPVTDefaults',stretch=(1,1))
                                    },
 
-                'C-WAVE Output Power' : {'Trace': MainWidgetItem(rosetta.experiments.cwave.cwave_GUI, 'cwaveTraceWidget',stretch=(1,1)),
-                                         'C-WAVE Output Power Plot' : MainWidgetItem(rosetta.experiments.cwave.cwave_GUI,'FlexLinePlotWidgetWithCWAVEVTDefaults',stretch=(1,1))
+                'C-WAVE Output Power' : {
+                    'Trace': MainWidgetItem(rosetta.experiments.cwave.cwave_GUI, 'cwaveTraceWidget',stretch=(1,1)),
+                    'C-WAVE Output Power Plot' : MainWidgetItem(rosetta.experiments.cwave.cwave_GUI,'FlexLinePlotWidgetWithCWAVEVTDefaults',stretch=(1,1))
                                    },
+                'FSM': {
+                    'FSM Scan': MainWidgetItem(rosetta.experiments.fsmScan.fsmScan_GUI, 'fsmScanWidget', stretch=(1, 1)),
+                    'FSM Scan Image': MainWidgetItem(rosetta.experiments.fsmScan.fsmScan_GUI, 'fsmScanPlotWidget', stretch=(100, 100), ),
+                    'FSM Move': MainWidgetItem(rosetta.experiments.fsmScan.fsmScan_GUI, 'fsmMoveWidget', stretch=(1,1))
+                    },
 
                 ############################# Example widgets #############################
 
