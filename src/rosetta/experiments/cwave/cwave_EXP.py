@@ -89,8 +89,8 @@ class cwaveExperiment:
                 self.powers_PMP.append(current_power_PMP)
 
                 #print(current_power_OPO)
-                print(current_power_SHG)
-                print(current_power_PMP)
+                #print(current_power_SHG)
+                #print(current_power_PMP)
                 time.sleep(1/rate)
 
 

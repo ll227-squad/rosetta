@@ -37,7 +37,7 @@ class cwaveTraceWidget(ExperimentWidget):
             },
             'dataset' : {
                 'display_text': 'Dataset Name',
-                'widget': QtWidgets.QLineEdit('OPOpowervstime')
+                'widget': QtWidgets.QLineEdit('CWAVEpowervstime')
             }
         }
 
@@ -57,20 +57,40 @@ class cwaveTraceWidget(ExperimentWidget):
 
 
 def process_CWAVE_data(sink: DataSink):
-    processed_dataset = []
+    processed_datasetOPO = []
+    processed_datasetSHG = []
+    processed_datasetPMP = []
     for s,_ in enumerate(sink.datasets['times']):
         ts = sink.datasets['times']
-        ps = sink.datasets['OPO powers']
-        processed_dataset.append(np.stack([ts, ps]))
-    sink.datasets['OPOpowervstime_processed'] = processed_dataset
+        psOPO = sink.datasets['OPO powers']
+        psSHG = sink.datasets['SHG powers']
+        psPMP = sink.datasets['Pump powers']
+        processed_datasetOPO.append(np.stack([ts, psOPO]))
+        processed_datasetSHG.append(np.stack([ts, psSHG]))
+        processed_datasetPMP.append(np.stack([ts, psPMP]))
+        #processed_dataset.append(np.stack([ts, psOPO, psSHG, psPMP]))
+    sink.datasets['OPOpowervstime_processed'] = processed_datasetOPO
+    sink.datasets['SHGpowervstime_processed'] = processed_datasetSHG
+    sink.datasets['PMPpowervstime_processed'] = processed_datasetPMP
 
 class FlexLinePlotWidgetWithCWAVEVTDefaults(FlexLinePlotWidget):
     """Add some default settings to the FlexSinkLinePlotWidget."""
     def __init__(self):
         super().__init__(data_processing_func = process_CWAVE_data)
         # create some default signal plots
-        self.add_plot(name = 'OPOpowervstime',
+        self.add_plot(name = 'OPO Power Trace',
                       series='OPOpowervstime_processed',
+                      scan_i='',
+                      scan_j='',
+                      processing='Average')
+        self.add_plot(name = 'SHG Power Trace',
+                      series='SHGpowervstime_processed',
+                      scan_i='',
+                      scan_j='',
+                      processing='Average')
+        
+        self.add_plot(name = 'Pump Power Trace',
+                      series='PMPpowervstime_processed',
                       scan_i='',
                       scan_j='',
                       processing='Average')
@@ -80,4 +100,4 @@ class FlexLinePlotWidgetWithCWAVEVTDefaults(FlexLinePlotWidget):
         # set the legend location
         legend.setOffset((-10, -50))
 
-        self.datasource_lineedit.setText('OPOpowervstime')
+        self.datasource_lineedit.setText('CWAVEpowervstime')
