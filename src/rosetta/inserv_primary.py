@@ -23,7 +23,7 @@ nspyre_init_logger(
     file_size=10_000_000,
 )
 
-with InstrumentServer() as inserv_primary, InstrumentGateway(port=42067) as remote_gw:
+with InstrumentServer() as inserv_primary:#, InstrumentGateway() as remote_gw:
     ################################################################################
     #################### ADD DRIVERS TO PRIMARY INSERV HERE ########################
     ################################################################################
@@ -40,12 +40,12 @@ with InstrumentServer() as inserv_primary, InstrumentGateway(port=42067) as remo
     #                              False if not; all arguments passed through rpyc to make sure there are no netref types
 
 
-    inserv_primary.add('subs',              _HERE /  'drivers' / 'driver_subsystems.py'             , 'SubsystemsDriver'    , args=[inserv_primary, remote_gw], local_args=True)
+    #inserv_primary.add('subs',              _HERE /  'drivers' / 'driver_subsystems.py'             , 'SubsystemsDriver'    , args=[inserv_primary, remote_gw], local_args=True)
     inserv_primary.add('odmr_driver',       _HERE /  'drivers' / 'driver_fake_odmr.py'              , 'FakeODMRInstrument'  , args=[])
-    inserv_primary.add('powerMeter_driver', _HERE /  'drivers' / 'thorlabs' / 'PM100USB.py'         , 'PM100USBInstrument'  , args=['USB0::0x1313::0x8072::1916964::INSTR'])
+    #inserv_primary.add('powerMeter_driver', _HERE /  'drivers' / 'thorlabs' / 'PM100USB.py'         , 'PM100USBInstrument'  , args=['USB0::0x1313::0x8072::1916964::INSTR'])
     inserv_primary.add('ni_photonCounting', _HERE /  'drivers' / 'ni'       / 'ni_photonCounting.py', 'nidaqPhotonCounter'  , args=[])
     inserv_primary.add('ni_motionControl',  _HERE /  'drivers' / 'ni'       / 'ni_motionControl.py' , 'nidaqMotionControl'  , args=[])
-    inserv_primary.add('cwave_driver',      _HERE /  'drivers' / 'hubner'   / 'gtr.py'              , 'Gtr'                 , args=[])
+    #inserv_primary.add('cwave_driver',      _HERE /  'drivers' / 'hubner'   / 'gtr.py'              , 'Gtr'                 , args=[])
 
     ################################################################################
     ################################################################################

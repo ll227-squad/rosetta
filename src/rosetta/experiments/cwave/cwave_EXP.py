@@ -109,6 +109,13 @@ class cwaveExperiment:
                     # the GUI has asked us nicely to exit
                     return     
 
+    def cwavePLE(self, datasetName:str, frequency_min:float, frequency_max:float, rate_PLE:float,
+                       increments:int, 
+                       binRatio:float, binTime: float, 
+        iterations: int, TO:float, 
+                         PFI: str, sampling_rate: float, counter_chan = 'ctr0',):
+        
+        return
 
 if __name__ == '__main__':
     exp = cwaveExperiment()
