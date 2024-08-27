@@ -23,7 +23,7 @@ nspyre_init_logger(
     file_size=10_000_000,
 )
 
-with InstrumentServer() as inserv_primary:#, InstrumentGateway() as remote_gw:
+with InstrumentServer(port=42068) as inserv_primary:#, InstrumentGateway() as remote_gw:
     ################################################################################
     #################### ADD DRIVERS TO PRIMARY INSERV HERE ########################
     ################################################################################
@@ -45,7 +45,7 @@ with InstrumentServer() as inserv_primary:#, InstrumentGateway() as remote_gw:
     #inserv_primary.add('powerMeter_driver', _HERE /  'drivers' / 'thorlabs' / 'PM100USB.py'         , 'PM100USBInstrument'  , args=['USB0::0x1313::0x8072::1916964::INSTR'])
     inserv_primary.add('ni_photonCounting', _HERE /  'drivers' / 'ni'       / 'ni_photonCounting.py', 'nidaqPhotonCounter'  , args=[])
     inserv_primary.add('ni_motionControl',  _HERE /  'drivers' / 'ni'       / 'ni_motionControl.py' , 'nidaqMotionControl'  , args=[])
-    #inserv_primary.add('cwave_driver',      _HERE /  'drivers' / 'hubner'   / 'gtr.py'              , 'Gtr'                 , args=[])
+    #inserv_primary.add('cwave_driver',      _HERE /  'drivers' / 'hubner'   / 'gtr_wrapper.py'      , 'Gtr_wrapper'         , args=[])
 
     ################################################################################
     ################################################################################

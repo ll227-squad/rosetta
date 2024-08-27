@@ -1,6 +1,6 @@
 @ECHO OFF
 :: Run nspyre gui with this file
-TITLE Run dataserv
+TITLE Run gui
 set CONDAPATH=C:\Users\awsch\miniconda3
 set ENVNAME=nsp
 set GUIPATH=C:\Users\awsch\rosetta\src\rosetta\gui

@@ -11,6 +11,8 @@ import json
 import asyncio
 import websockets
 
+from rpyc.utils.classic import obtain
+
 class _Reader:
     '''Helper class for reading binary values from an array'''
     def __init__(self, data):
@@ -773,6 +775,7 @@ class Gtr:
 
     def set_piezo_scan_settings(self, channel: PiezoChannel, settings: PiezoScanSettings) -> None:
         '''Sets piezo setting in scan mode'''
+        #import pdb; pdb.set_trace()
         assert isinstance(channel, PiezoChannel)
         assert isinstance(settings, PiezoScanSettings)
         self.__set("piezo_scan_settings", channel.value, {

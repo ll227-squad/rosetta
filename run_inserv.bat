@@ -1,6 +1,6 @@
 @ECHO OFF
 :: Run nspyre inserv with this file
-TITLE Run inserv
+TITLE Run inserv *** DO NOT FORCE QUIT ***
 set CONDAPATH=C:\Users\awsch\miniconda3
 set ENVNAME=nsp
 set INSERVPATH=C:\Users\awsch\rosetta\src\rosetta
@@ -17,6 +17,6 @@ call %CONDAPATH%\Scripts\activate.bat %ENVPATH%
 ECHO %ENVNAME% environment activated
 ECHO ====================================
 ECHO Trying to open instrument server file %INSERVFILE% at %INSERVPATH%
-ECHO ====================================
 call python %INSERVPATH%\%INSERVFILE% 
+ECHO ====================================
 PAUSE

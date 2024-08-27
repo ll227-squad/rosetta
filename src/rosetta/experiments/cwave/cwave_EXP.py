@@ -1,5 +1,6 @@
 import time
 import logging
+import enum
 from pathlib import Path
 from itertools import count
 
@@ -12,6 +13,8 @@ from nspyre import StreamingList
 from rpyc.utils.classic import obtain
 
 from rosetta.insmgr import MyInstrumentManager
+
+from rosetta.drivers.hubner import gtr
 
 _HERE = Path(__file__).parent
 _logger = logging.getLogger(__name__)
@@ -109,13 +112,113 @@ class cwaveExperiment:
                     # the GUI has asked us nicely to exit
                     return     
 
-    def cwavePLE(self, datasetName:str, frequency_min:float, frequency_max:float, rate_PLE:float,
-                       increments:int, 
-                       binRatio:float, binTime: float, 
-        iterations: int, TO:float, 
-                         PFI: str, sampling_rate: float, counter_chan = 'ctr0',):
+    def cwavePLE(self, dataset:str, min_piezo:float, max_piezo:float, scan_rate:float,
+                                    num_points:int, measure_rate:float,
+                                    data_channel:str, ctr_channel:str, sampling_rate:float):
+        """
+        Get counts on DAQ chanel PFI as as the C-WAVE's OPO piezo sweeps through min_piezo (e.g. 10% of piezo range) and max_piezo (90% of piezo range).
+
+        Manually set C-WAVE to center wavelength. Put Lyot filter into inselective position manually if necessary.
         
-        return
+        Repeat num_points:
+        [ At t0: record t_initial, wl_initial, p_initial
+          Record number of counts on PFI channel for 1/measure_rate time
+          At t1: record t_final, wl_final, p_final
+          Calculate t_average, wl_average, p_average
+          Push data to dataserv, with the intent to plot (counts vs wls_average) where counts may be nomalized by ps_average ]
+
+        Args:
+            dataset: name of the dataset to push data to
+            min_piezo: Between 0% and 100% (kindly stay away from extremes, so realistically, between 5% and 95%) of C-WAVE's OPO piezo scan range
+            max_piezo: Between 0% and 100% (kindly stay away from extremes, so realistically, between 5% and 95%) of C-WAVE's OPO piezo scan range
+            scan_rate (Hz): Rate at which OPO piezo sweeps through min_piezo and max_piezo
+            num_points (int): Number of points to take in PLE scan
+            measure_rate (Hz): Length of time that DAQ is asked to read data_channel; should be about 10x higher than scan_rate to prevent aliasing
+            data_channel: e.g. Dev1/PFI1
+            ctr_channel: e.g. Dev1/ctr0
+            sampling_rate (Hz): Rate at which counts on data_channel are read from DAQ
+        """
+        
+        with MyInstrumentManager() as mgr, DataSource(dataset) as cwavePLE_data:
+            # Instantiate and connect to instruments
+            cwave = mgr.cwave_driver
+            cwave.connect('192.168.1.10')
+
+            daq = mgr.ni_photonCounting
+
+            #wlm = mgr.WS8_driver
+
+            # Create streaming lists
+            # ts = time stamp; wls = wavelengths; ps = OPO power
+            self.ts_average  = StreamingList() # (ts_initial + ts_final) /2
+            self.ts_initial  = StreamingList()
+            self.ts_final    = StreamingList()
+            self.wls_average = StreamingList() # (wls_initial + wls_final) /2 for each average
+            self.wls_initial = StreamingList()
+            self.wls_final   = StreamingList()
+            self.ps_average  = StreamingList() # (ps_initial + ps_final) /2
+            self.ps_initial  = StreamingList()
+            self.ps_final    = StreamingList()
+            self.counts      = StreamingList()
+
+            self.startTime = time.time()
+
+            # Set OPO piezo to scan continuously
+            cwave.scan_OPO_piezo(min_piezo, max_piezo, scan_rate)
+
+            for n in range(num_points):
+                t0 = time.time()
+                #wl0 = wlm.get_wavelength()
+                wl0 = 100
+                p0 = cwave.get_status().pdOpoPower
+
+                #data = daq.readCtr_multi_internalClk(sampling_rate, int(sampling_rate/measure_rate),ctrChannelNums=[1])
+                data = [3.14]
+                time.sleep(1/measure_rate)
+
+                #wl1 = wlm.get_wavelength()
+                t1 = time.time()
+                wl1 = 101 + (t1-self.startTime)
+                p1 = cwave.get_status().pdOpoPower
+
+                # Calculate and store data
+                self.ts_average.append(0.5*(t0+t1)-self.startTime)
+                self.ts_initial.append(t0-self.startTime)
+                self.ts_final.append(t1-self.startTime)
+                self.wls_average.append(0.5*(wl0+wl1))
+                self.wls_initial.append(wl0)
+                self.wls_final.append(wl1)
+                self.ps_average.append(0.5*(p0+p1))
+                self.ps_initial.append(p0)
+                self.ps_final.append(p1)
+                self.counts.append(data[0])
+
+                # Push data to dataserv
+                cwavePLE_data.push(
+                    {'params' :{ 'min_piezo' : min_piezo,
+                                 'max_piezo' : max_piezo,
+                                 'scan_rate' : scan_rate,
+                                 'num_points': num_points,
+                                 'measure_rate': measure_rate,
+                                 'data_channel': data_channel,
+                                 'ctr_channel' : ctr_channel,
+                                 'sampling_rate': sampling_rate,
+                                },              
+                     'title': 'PLE using C-WAVE laser',
+                     'xlabel': 'Wavelength (nm)',
+                     'ylabel': 'Counts',
+                     'datasets':{'Time of measurement (s)' : self.ts_average,
+                                 'Wavelength during measurement (nm)' : self.wls_average,
+                                 'Power during measurement (W)' : self.ps_average,
+                                 'Counts during measurement (counts)' : self.counts
+                                 
+                         
+                                }}
+                )
+
+            # stop OPO from scanning continuously, set to 50% output
+            cwave.stop_OPO_piezo(50)
+                
 
 if __name__ == '__main__':
     exp = cwaveExperiment()
