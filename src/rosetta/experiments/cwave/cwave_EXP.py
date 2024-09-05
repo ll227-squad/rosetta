@@ -172,7 +172,8 @@ class cwaveExperiment:
                 wl0 = 100
                 p0 = cwave.get_status().pdOpoPower
 
-                #data = daq.readCtr_multi_internalClk(sampling_rate, int(sampling_rate/measure_rate),ctrChannelNums=[1])
+                channel_num = int(data_channel.split("/"[1][3:])) # from "Dev1/PFI123" get 123 as an integer
+                #data = daq.readCtr_multi_internalClk(sampling_rate, int(1/measure_rate),ctrChannelNums=[channel_num])
                 data = [3.14]
                 time.sleep(1/measure_rate)
 

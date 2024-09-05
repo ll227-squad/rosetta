@@ -120,6 +120,7 @@ class fsmScanExperiment:
                                         'Number of x pixels'        : num_pixels_x,
                                         'Number of y pixels'        : num_pixels_y,
                                         'Pixel scan rate (Hz)'      : scan_rate,
+                                        'Time per pixel (s)'        : 1/scan_rate,
                                         'DAQ averages per pixel'    : avgs_per_pixel,
                                         'DAQ acquisition rate (Hz)' : scan_rate*avgs_per_pixel,
                                         'DAQ acquisition channel'   : data_channel},

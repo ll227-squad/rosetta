@@ -43,6 +43,7 @@ with InstrumentServer(port=42068) as inserv_primary:#, InstrumentGateway() as re
     #inserv_primary.add('subs',              _HERE /  'drivers' / 'driver_subsystems.py'             , 'SubsystemsDriver'    , args=[inserv_primary, remote_gw], local_args=True)
     inserv_primary.add('odmr_driver',       _HERE /  'drivers' / 'driver_fake_odmr.py'              , 'FakeODMRInstrument'  , args=[])
     #inserv_primary.add('powerMeter_driver', _HERE /  'drivers' / 'thorlabs' / 'PM100USB.py'         , 'PM100USBInstrument'  , args=['USB0::0x1313::0x8072::1916964::INSTR'])
+    inserv_primary.add('ni_analogTasks',    _HERE /  'drivers' / 'ni'       / 'ni_analogTasks.py',    'nidaqAnalogTasks'    , args=[])
     inserv_primary.add('ni_photonCounting', _HERE /  'drivers' / 'ni'       / 'ni_photonCounting.py', 'nidaqPhotonCounter'  , args=[])
     inserv_primary.add('ni_motionControl',  _HERE /  'drivers' / 'ni'       / 'ni_motionControl.py' , 'nidaqMotionControl'  , args=[])
     #inserv_primary.add('cwave_driver',      _HERE /  'drivers' / 'hubner'   / 'gtr_wrapper.py'      , 'Gtr_wrapper'         , args=[])

@@ -8,6 +8,11 @@ from contextlib import ExitStack
 
 
 class nidaqPhotonCounter():
+    """
+    Contains:
+    - readCtrs_multi_internalClk(acqRate, numSamples, ctrChannelNums)
+    - readCtrs_single_internalClk(acqRate, numSamples, ctrChannelNums)
+    """
     def __init__(self):
         self.APDchannel = '/Dev1/PFI11'
         self.SNSPDchannel = '/Dev1/PFI4'

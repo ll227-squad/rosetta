@@ -10,6 +10,16 @@ from rpyc.utils.classic import obtain
 
 
 class nidaqMotionControl():
+    """
+    Contains:
+    - move
+    - move_relative
+    - oneD_scan
+    - twoD_scan
+    - read_current_position
+    - check_bounds
+    - small helper functions, getters, and setters
+    """
     DEFAULT_UNITS_DISTANCE = 'um'
     DEFAULT_UNITS_RATE     = 'Hz'
     DEFAULT_UNITS_VOLTAGE  = 'V'

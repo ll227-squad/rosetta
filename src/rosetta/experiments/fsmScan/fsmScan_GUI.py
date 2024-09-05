@@ -29,13 +29,9 @@ class fsmScanWidget(ExperimentWidget):
     def __init__(self):
 
         params_config = {
-            'center_scan' : {
-                'display_text': 'Center scan on point 1?',
-                'widget': QtWidgets.QCheckBox(),
-            },
-            
+          
             'point1x' : {
-                'display_text': 'Point 1 x-coord (m)',
+                'display_text': 'Top left point (or center) x (m)',
                 'widget': SpinBox(
                     value = -1e-6,
                     suffix = 'm',
@@ -46,7 +42,7 @@ class fsmScanWidget(ExperimentWidget):
             },
 
             'point1y' : {
-                'display_text': 'Point 1 y-coord (m)',
+                'display_text': 'Top left point (or center) y (m)',
                 'widget': SpinBox(
                     value = 1e-6,
                     suffix = 'm',
@@ -57,7 +53,7 @@ class fsmScanWidget(ExperimentWidget):
             },
 
             'point2x' : {
-                'display_text': 'Point 2 x-coord (m)',
+                'display_text': 'Bottom right x (m)',
                 'widget': SpinBox(
                     value = 1e-6,
                     suffix = 'm',
@@ -68,7 +64,7 @@ class fsmScanWidget(ExperimentWidget):
             },
 
             'point2y' : {
-                'display_text': 'Point 2 y-coord (m)',
+                'display_text': 'Bottom right y (m)',
                 'widget': SpinBox(
                     value = -1e-6,
                     suffix = 'm',
@@ -77,10 +73,15 @@ class fsmScanWidget(ExperimentWidget):
                     dec = True
                 ),
             },
+
+            'center_scan' : {
+                'display_text': 'Center scan on a point?',
+                'widget': QtWidgets.QCheckBox(),
+            },
             'pixel_resolution': {
-                'display_text': 'Pixel resolution (m)',
+                'display_text': 'Pixel spacing for center scan (m)',
                 'widget': SpinBox(
-                    value = 1,
+                    value = 1e-6,
                     suffix = 'm',
                     siPrefix = True,
                     bounds = (0,10e6),
@@ -96,7 +97,7 @@ class fsmScanWidget(ExperimentWidget):
                 ),
             },
             'num_pixels_y': {
-                'display_text': '# of pixels in x-direction',
+                'display_text': '# of pixels in y-direction',
                 'widget': SpinBox(
                     value = 20,
                     bounds = (1,40),
@@ -106,7 +107,7 @@ class fsmScanWidget(ExperimentWidget):
             'scan_rate': {
                 'display_text': 'Pixel scan rate (Hz)',
                 'widget': SpinBox(
-                    value = 100,
+                    value = 10,
                     suffix = 'Hz',
                     siPrefix = True,
                     bounds = (1e-3,10e3),
