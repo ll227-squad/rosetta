@@ -9,7 +9,7 @@ Chloe Washabaugh August 2024
 #from rosetta.drivers.hubner.gtr import Gtr
 try:
     from rosetta.drivers.hubner import gtr
-except ModuleNotFoundError:
+except:
     from drivers.hubner import gtr
 
 class Gtr_wrapper(gtr.Gtr):
