@@ -73,6 +73,12 @@ def main():
                     'Power Meter Plot' : MainWidgetItem(rosetta.experiments.powerMeter.powerMeter_GUI,'FlexLinePlotWidgetWithPVTDefaults',stretch=(1,1))
                     },
 
+                'Signal Generator' : {
+                    'Signal Generator Status': MainWidgetItem(rosetta.experiments.cwODMR.signalGenerator_GUI, 'signalGeneratorStatusWidget',stretch=(1,1)),
+                    'Signal Generator Trace': MainWidgetItem(rosetta.experiments.cwODMR.signalGenerator_GUI, 'signalGeneratorWidget',stretch=(1,1)),
+                    'Signal Generator Plot' : MainWidgetItem(rosetta.experiments.cwODMR.signalGenerator_GUI,'FlexLinePlotWidgetWithFVTDefaults',stretch=(1,1))
+                    },
+
                 'C-WAVE Output Power' : {
                     'Trace': MainWidgetItem(rosetta.experiments.cwave.cwave_GUI, 'cwaveTraceWidget',stretch=(1,1)),
                     'C-WAVE Output Power Plot' : MainWidgetItem(rosetta.experiments.cwave.cwave_GUI,'FlexLinePlotWidgetWithCWAVEVTDefaults',stretch=(1,1))

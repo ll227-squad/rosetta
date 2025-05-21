@@ -64,7 +64,7 @@ class cwaveExperiment:
         with MyInstrumentManager() as mgr, DataSource(dataset) as cwave_data:
             cwave_driver = mgr.cwave_driver
 
-            cwave_driver.connect('192.168.1.10')
+            cwave_driver.connect('192.168.202.10')
 
             self.times      = StreamingList()
             self.powers_OPO = StreamingList()
@@ -142,7 +142,7 @@ class cwaveExperiment:
         with MyInstrumentManager() as mgr, DataSource(dataset) as cwavePLE_data:
             # Instantiate and connect to instruments
             cwave = mgr.cwave_driver
-            cwave.connect('192.168.1.10')
+            cwave.connect('192.168.202.10')
 
             daq = mgr.ni_photonCounting
 
