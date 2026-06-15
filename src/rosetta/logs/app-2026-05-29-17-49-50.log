@@ -1,0 +1,3 @@
+2026-05-29 17:49:50.349 [    INFO] (          gateway.py: 152) Gateway connected to instrument server at "localhost:42068".
+2026-05-29 17:49:50.354 [    INFO] (          gateway.py: 152) Gateway connected to instrument server at "localhost:42067".
+2026-05-29 17:49:54.282 [    INFO] (          gateway.py: 173) Gateway disconnected from server at localhost:42067

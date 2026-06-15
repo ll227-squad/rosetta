@@ -1,0 +1,158 @@
+2026-04-14 16:53:03.784 [    INFO] (           server.py: 288) Starting InstrumentServer RPyC server...
+2026-04-14 16:53:03.792 [    INFO] (           server.py: 251) server started on [127.0.0.1]:42068
+2026-04-14 16:53:03.888 [    INFO] (           server.py: 212) Added device [odmr_driver] with args: [] kwargs: {}.
+2026-04-14 16:53:03.989 [   DEBUG] (        highlevel.py:2883) No visa library specified, trying to find alternatives.
+2026-04-14 16:53:03.989 [   DEBUG] (        highlevel.py:2887) Environment variable PYVISA_LIBRARY is unset.
+2026-04-14 16:53:04.000 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-04-14 16:53:04.008 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-04-14 16:53:04.009 [   DEBUG] (             util.py: 100) No user defined library files
+2026-04-14 16:53:04.009 [   DEBUG] (        highlevel.py:2847) The IVI implementation available
+2026-04-14 16:53:04.010 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-04-14 16:53:04.015 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-04-14 16:53:04.016 [   DEBUG] (             util.py: 100) No user defined library files
+2026-04-14 16:53:04.033 [   DEBUG] (        highlevel.py: 174) Library signatures: 90 ok, 0 failed
+2026-04-14 16:53:04.033 [   DEBUG] (        highlevel.py: 201) Created library wrapper for C:\WINDOWS\system32\visa32.dll
+2026-04-14 16:53:04.606 [   DEBUG] (        highlevel.py: 186) viOpenDefaultRM('<ViObject object at 0x00000259362FA250>',) -> 0
+2026-04-14 16:53:04.606 [   DEBUG] (        highlevel.py:3019) Created ResourceManager with session 4097
+2026-04-14 16:53:04.607 [   DEBUG] (        highlevel.py: 186) viParseRsrcEx(4097, 'USB0::0x1313::0x8072::1916964::INSTR', 'c_ushort(7)', 'c_ushort(0)', <ctypes.c_char_Array_256 object at 0x0000025936334AD0>, <ctypes.c_char_Array_256 object at 0x0000025936334B50>, <ctypes.c_char_Array_256 object at 0x0000025936334BD0>) -> 0
+2026-04-14 16:53:04.608 [   DEBUG] (         resource.py: 277) USB0::0x1313::0x8072::1916964::0::INSTR - opening ...
+2026-04-14 16:53:04.611 [   DEBUG] (        highlevel.py: 186) viOpen(4097, 'USB0::0x1313::0x8072::1916964::0::INSTR', <AccessModes.no_lock: 0>, 0, '<ViObject object at 0x0000025936334B50>') -> 0
+2026-04-14 16:53:04.612 [   DEBUG] (         resource.py: 302) USB0::0x1313::0x8072::1916964::0::INSTR - is open with session 1
+2026-04-14 16:53:04.612 [   DEBUG] (        highlevel.py: 186) viSetAttribute(1, 1073676314, 2000) -> 0
+2026-04-14 16:53:04.612 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'*IDN?\r\n', 7, 'c_ulong(7)') -> 0
+2026-04-14 16:53:04.613 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-04-14 16:53:04.613 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x0000025936335150>, 20480, 'c_ulong(32)') -> 0
+2026-04-14 16:53:04.614 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'SYST:SENS:IDN?\r\n', 16, 'c_ulong(16)') -> 0
+2026-04-14 16:53:04.614 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-04-14 16:53:04.617 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x00000259363351D0>, 20480, 'c_ulong(37)') -> 0
+2026-04-14 16:53:04.617 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'SENS:CORR:WAV?\r\n', 16, 'c_ulong(16)') -> 0
+2026-04-14 16:53:04.618 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-04-14 16:53:04.619 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x00000259363354D0>, 20480, 'c_ulong(13)') -> 0
+2026-04-14 16:53:04.620 [    INFO] (         PM100USB.py:  47) Connected to PM100USB [USB0::0x1313::0x8072::1916964::INSTR Thorlabs,PM100USB,1916964,1.7.0
+].
+2026-04-14 16:53:04.620 [    INFO] (           server.py: 212) Added device [powerMeter_driver] with args: ['USB0::0x1313::0x8072::1916964::INSTR'] kwargs: {}.
+2026-04-14 16:53:04.749 [    INFO] (           server.py: 212) Added device [ni_analogTasks] with args: [] kwargs: {}.
+2026-04-14 16:53:04.752 [    INFO] (           server.py: 212) Added device [ni_photonCounting] with args: [] kwargs: {}.
+2026-04-14 16:53:05.034 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 61304) with fd 1432
+2026-04-14 16:53:05.154 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 61304)
+2026-04-14 16:53:05.154 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn1' object at 0x0000025937C1BB50> connected.
+2026-04-14 16:53:06.161 [    INFO] (           server.py: 212) Added device [ni_motionControl] with args: [] kwargs: {}.
+2026-04-14 16:53:06.357 [   DEBUG] (   connectionpool.py: 241) Starting new HTTP connection (1): 192.168.1.105:8050
+2026-04-14 16:53:06.362 [   DEBUG] (   connectionpool.py: 544) http://192.168.1.105:8050 "POST /json-rpc HTTP/1.1" 200 None
+2026-04-14 16:53:06.363 [   DEBUG] (   connectionpool.py: 241) Starting new HTTP connection (1): 192.168.1.105:8050
+2026-04-14 16:53:06.383 [   DEBUG] (   connectionpool.py: 544) http://192.168.1.105:8050 "POST /json-rpc HTTP/1.1" 200 None
+2026-04-14 16:53:06.384 [    INFO] (             PS82.py:  62) Connected to Swabian 8/2 Pulse Streamer [<PS82.PS82Instrument object at 0x0000025937C1D450>].
+2026-04-14 16:53:06.385 [    INFO] (           server.py: 212) Added device [pulseStreamer_driver] with args: ['192.168.1.105'] kwargs: {}.
+2026-04-14 16:53:06.391 [    INFO] (           server.py: 212) Added device [srs_driver] with args: [] kwargs: {}.
+2026-04-14 16:53:06.394 [   DEBUG] (        highlevel.py:2883) No visa library specified, trying to find alternatives.
+2026-04-14 16:53:06.394 [   DEBUG] (        highlevel.py:2887) Environment variable PYVISA_LIBRARY is unset.
+2026-04-14 16:53:06.394 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-04-14 16:53:06.401 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-04-14 16:53:06.401 [   DEBUG] (             util.py: 100) No user defined library files
+2026-04-14 16:53:06.402 [   DEBUG] (        highlevel.py:2847) The IVI implementation available
+2026-04-14 16:53:06.402 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-04-14 16:53:06.407 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-04-14 16:53:06.408 [   DEBUG] (             util.py: 100) No user defined library files
+2026-04-14 16:53:06.408 [   DEBUG] (        highlevel.py:2996) Reusing ResourceManager with session 4097
+2026-04-14 16:53:06.409 [   DEBUG] (        highlevel.py: 186) viParseRsrcEx(4097, 'GPIB1::19::INSTR', 'c_ushort(1)', 'c_ushort(1)', <ctypes.c_char_Array_256 object at 0x0000025938AFBED0>, <ctypes.c_char_Array_256 object at 0x0000025938AFBF50>, <ctypes.c_char_Array_256 object at 0x0000025938B68050>) -> 0
+2026-04-14 16:53:06.409 [   DEBUG] (         resource.py: 277) GPIB1::19::INSTR - opening ...
+2026-04-14 16:53:06.547 [   DEBUG] (        highlevel.py: 186) viOpen(4097, 'GPIB1::19::INSTR', <AccessModes.no_lock: 0>, 0, '<ViObject object at 0x0000025938AFBE50>') -> 0
+2026-04-14 16:53:06.548 [   DEBUG] (         resource.py: 302) GPIB1::19::INSTR - is open with session 2
+2026-04-14 16:53:06.550 [   DEBUG] (        highlevel.py: 186) viSetAttribute(2, 1073676314, 2000) -> 0
+2026-04-14 16:53:06.552 [   DEBUG] (        highlevel.py: 186) viWrite(2, b'*IDN?\r\n', 7, 'c_ulong(7)') -> 0
+2026-04-14 16:53:06.553 [   DEBUG] (     messagebased.py: 435) GPIB1::19::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-04-14 16:53:06.555 [   DEBUG] (        highlevel.py: 186) viRead(2, <ctypes.c_char_Array_20480 object at 0x0000025938B685D0>, 20480, 'c_ulong(50)') -> 0
+2026-04-14 16:53:06.556 [    INFO] (           e8257d.py:  45) Connected to E8257D [GPIB1::19::INSTR Agilent Technologies, E8257D, MY46410278, C.04.71
+].
+2026-04-14 16:53:06.557 [    INFO] (           server.py: 212) Added device [e8257d_driver2] with args: ['GPIB1::19::INSTR'] kwargs: {}.
+2026-04-14 16:53:32.542 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 61322) with fd 1916
+2026-04-14 16:53:32.543 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 61322)
+2026-04-14 16:53:32.544 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn2' object at 0x0000025938B58CD0> connected.
+2026-04-14 16:53:52.994 [    INFO] (           server.py: 356) Client <rpyc.core.protocol.Connection 'conn2' object at 0x0000025938B58CD0> disconnected.
+2026-04-14 16:53:52.995 [    INFO] (           server.py: 207) goodbye ('127.0.0.1', 61322)
+2026-04-15 15:57:27.633 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 53597) with fd 920
+2026-04-15 15:57:27.654 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 53597)
+2026-04-15 15:57:27.657 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn3' object at 0x0000025938B87850> connected.
+2026-04-15 16:02:34.841 [    INFO] (           server.py: 356) Client <rpyc.core.protocol.Connection 'conn3' object at 0x0000025938B87850> disconnected.
+2026-04-15 16:02:34.842 [    INFO] (           server.py: 207) goodbye ('127.0.0.1', 53597)
+2026-04-15 16:03:22.966 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 53634) with fd 920
+2026-04-15 16:03:22.968 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 53634)
+2026-04-15 16:03:22.968 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn4' object at 0x0000025938B858D0> connected.
+2026-04-16 03:51:47.327 [   ERROR] (_library_interpreter.py:5928) Failed to get extended error info. DAQmxGetExtendedErrorInfo returned error code -200500.
+2026-04-16 03:51:47.336 [   DEBUG] (         protocol.py: 363) Exception caught
+Traceback (most recent call last):
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 356, in _dispatch_request
+    res = self._HANDLERS[handler](self, *args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 837, in _handle_call
+    return obj(*args, **dict(kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\rosetta\src\rosetta\drivers\ni\ni_photonCounting.py", line 163, in readCtrs_single_internalClk
+    data = self.readCtrs_multi_internalClk(acqRate, 1, ctrChannelNums)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\rosetta\src\rosetta\drivers\ni\ni_photonCounting.py", line 84, in readCtrs_multi_internalClk
+    ctrTask.control(TaskMode.TASK_COMMIT) # alternative to task.start()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nidaqmx\task.py", line 388, in control
+    self._interpreter.task_control(self._handle, action.value)
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nidaqmx\_library_interpreter.py", line 5439, in task_control
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nidaqmx\_library_interpreter.py", line 6041, in check_for_error
+    raise DaqError(extended_error_info, error_code)
+nidaqmx.errors.DaqError: Failed to retrieve error description.
+2026-04-16 03:51:47.357 [    INFO] (           server.py: 356) Client <rpyc.core.protocol.Connection 'conn4' object at 0x0000025938B858D0> disconnected.
+2026-04-16 03:51:47.357 [    INFO] (           server.py: 207) goodbye ('127.0.0.1', 53634)
+2026-04-16 03:51:47.358 [   ERROR] (           server.py: 185) client connection terminated abruptly
+Traceback (most recent call last):
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 183, in _authenticate_and_serve_client
+    self._serve_client(sock2, credentials)
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 205, in _serve_client
+    self._handle_connection(conn)
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 211, in _handle_connection
+    conn.serve_all()
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 654, in serve_all
+    self.serve(None)
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 434, in serve
+    data = self._channel.poll(timeout) and self._channel.recv()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\channel.py", line 47, in poll
+    return self.stream.poll(timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\stream.py", line 48, in poll
+    rl = p.poll(timeout.timeleft())
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\lib\compat.py", line 164, in poll
+    rl, wl, _ = select(self.rlist, self.wlist, (), timeout)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+MemoryError
+2026-04-16 03:51:47.363 [CRITICAL] (          logging.py:  32) Exception in thread RpycSpawnThread-builtins.method-140727107291936-2582227311936:
+2026-04-16 03:51:47.363 [CRITICAL] (          logging.py:  32) Traceback (most recent call last):
+2026-04-16 03:51:47.363 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\threading.py", line 1045, in _bootstrap_inner
+2026-04-16 03:51:47.364 [CRITICAL] (          logging.py:  32)     self.run()
+2026-04-16 03:51:47.365 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\threading.py", line 982, in run
+2026-04-16 03:51:47.366 [CRITICAL] (          logging.py:  32)     self._target(*self._args, **self._kwargs)
+2026-04-16 03:51:47.367 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 183, in _authenticate_and_serve_client
+2026-04-16 03:51:47.368 [CRITICAL] (          logging.py:  32)     self._serve_client(sock2, credentials)
+2026-04-16 03:51:47.368 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 205, in _serve_client
+2026-04-16 03:51:47.369 [CRITICAL] (          logging.py:  32)     self._handle_connection(conn)
+2026-04-16 03:51:47.369 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\utils\server.py", line 211, in _handle_connection
+2026-04-16 03:51:47.370 [CRITICAL] (          logging.py:  32)     conn.serve_all()
+2026-04-16 03:51:47.370 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 654, in serve_all
+2026-04-16 03:51:47.371 [CRITICAL] (          logging.py:  32)     self.serve(None)
+2026-04-16 03:51:47.372 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 434, in serve
+2026-04-16 03:51:47.373 [CRITICAL] (          logging.py:  32)     data = self._channel.poll(timeout) and self._channel.recv()
+2026-04-16 03:51:47.373 [CRITICAL] (          logging.py:  32)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-04-16 03:51:47.373 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\channel.py", line 47, in poll
+2026-04-16 03:51:47.374 [CRITICAL] (          logging.py:  32)     return self.stream.poll(timeout)
+2026-04-16 03:51:47.374 [CRITICAL] (          logging.py:  32)            ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-04-16 03:51:47.375 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\stream.py", line 48, in poll
+2026-04-16 03:51:47.375 [CRITICAL] (          logging.py:  32)     rl = p.poll(timeout.timeleft())
+2026-04-16 03:51:47.376 [CRITICAL] (          logging.py:  32)          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-04-16 03:51:47.376 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\lib\compat.py", line 164, in poll
+2026-04-16 03:51:47.377 [CRITICAL] (          logging.py:  32)     rl, wl, _ = select(self.rlist, self.wlist, (), timeout)
+2026-04-16 03:51:47.377 [CRITICAL] (          logging.py:  32)                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-04-16 03:51:47.377 [CRITICAL] (          logging.py:  32) MemoryError
+2026-04-16 12:40:54.554 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 58222) with fd 2588
+2026-04-16 12:40:54.555 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 58222)
+2026-04-16 12:40:54.556 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn5' object at 0x000002593905AA50> connected.
+2026-04-16 12:41:24.803 [    INFO] (           server.py: 356) Client <rpyc.core.protocol.Connection 'conn5' object at 0x000002593905AA50> disconnected.
+2026-04-16 12:41:24.803 [    INFO] (           server.py: 207) goodbye ('127.0.0.1', 58222)

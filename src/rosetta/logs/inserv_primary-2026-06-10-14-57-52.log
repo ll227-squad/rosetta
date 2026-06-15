@@ -1,0 +1,71 @@
+2026-06-10 14:57:52.025 [    INFO] (           server.py: 288) Starting InstrumentServer RPyC server...
+2026-06-10 14:57:52.029 [    INFO] (           server.py: 251) server started on [127.0.0.1]:42068
+2026-06-10 14:57:52.129 [    INFO] (           server.py: 212) Added device [odmr_driver] with args: [] kwargs: {}.
+2026-06-10 14:57:52.229 [   DEBUG] (        highlevel.py:2883) No visa library specified, trying to find alternatives.
+2026-06-10 14:57:52.229 [   DEBUG] (        highlevel.py:2887) Environment variable PYVISA_LIBRARY is unset.
+2026-06-10 14:57:52.241 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-06-10 14:57:52.252 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-06-10 14:57:52.252 [   DEBUG] (             util.py: 100) No user defined library files
+2026-06-10 14:57:52.252 [   DEBUG] (        highlevel.py:2847) The IVI implementation available
+2026-06-10 14:57:52.252 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-06-10 14:57:52.260 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-06-10 14:57:52.260 [   DEBUG] (             util.py: 100) No user defined library files
+2026-06-10 14:57:52.268 [   DEBUG] (        highlevel.py: 174) Library signatures: 90 ok, 0 failed
+2026-06-10 14:57:52.268 [   DEBUG] (        highlevel.py: 201) Created library wrapper for C:\WINDOWS\system32\visa32.dll
+2026-06-10 14:57:52.328 [   DEBUG] (        highlevel.py: 186) viOpenDefaultRM('<ViObject object at 0x0000020E359FA250>',) -> 0
+2026-06-10 14:57:52.328 [   DEBUG] (        highlevel.py:3019) Created ResourceManager with session 4097
+2026-06-10 14:57:52.328 [   DEBUG] (        highlevel.py: 186) viParseRsrcEx(4097, 'USB0::0x1313::0x8072::1916964::INSTR', 'c_ushort(7)', 'c_ushort(0)', <ctypes.c_char_Array_256 object at 0x0000020E35A34AD0>, <ctypes.c_char_Array_256 object at 0x0000020E35A34B50>, <ctypes.c_char_Array_256 object at 0x0000020E35A34BD0>) -> 0
+2026-06-10 14:57:52.332 [   DEBUG] (         resource.py: 277) USB0::0x1313::0x8072::1916964::0::INSTR - opening ...
+2026-06-10 14:57:52.336 [   DEBUG] (        highlevel.py: 186) viOpen(4097, 'USB0::0x1313::0x8072::1916964::0::INSTR', <AccessModes.no_lock: 0>, 0, '<ViObject object at 0x0000020E35A34B50>') -> 0
+2026-06-10 14:57:52.336 [   DEBUG] (         resource.py: 302) USB0::0x1313::0x8072::1916964::0::INSTR - is open with session 1
+2026-06-10 14:57:52.336 [   DEBUG] (        highlevel.py: 186) viSetAttribute(1, 1073676314, 2000) -> 0
+2026-06-10 14:57:52.336 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'*IDN?\r\n', 7, 'c_ulong(7)') -> 0
+2026-06-10 14:57:52.336 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-06-10 14:57:52.336 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x0000020E35A35150>, 20480, 'c_ulong(32)') -> 0
+2026-06-10 14:57:52.336 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'SYST:SENS:IDN?\r\n', 16, 'c_ulong(16)') -> 0
+2026-06-10 14:57:52.336 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-06-10 14:57:52.340 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x0000020E35A351D0>, 20480, 'c_ulong(37)') -> 0
+2026-06-10 14:57:52.340 [   DEBUG] (        highlevel.py: 186) viWrite(1, b'SENS:CORR:WAV?\r\n', 16, 'c_ulong(16)') -> 0
+2026-06-10 14:57:52.340 [   DEBUG] (     messagebased.py: 435) USB0::0x1313::0x8072::1916964::0::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-06-10 14:57:52.344 [   DEBUG] (        highlevel.py: 186) viRead(1, <ctypes.c_char_Array_20480 object at 0x0000020E35A354D0>, 20480, 'c_ulong(13)') -> 0
+2026-06-10 14:57:52.344 [    INFO] (         PM100USB.py:  47) Connected to PM100USB [USB0::0x1313::0x8072::1916964::INSTR Thorlabs,PM100USB,1916964,1.7.0
+].
+2026-06-10 14:57:52.344 [    INFO] (           server.py: 212) Added device [powerMeter_driver] with args: ['USB0::0x1313::0x8072::1916964::INSTR'] kwargs: {}.
+2026-06-10 14:57:52.492 [    INFO] (           server.py: 212) Added device [ni_analogTasks] with args: [] kwargs: {}.
+2026-06-10 14:57:52.494 [    INFO] (           server.py: 212) Added device [ni_photonCounting] with args: [] kwargs: {}.
+2026-06-10 14:57:52.626 [    INFO] (           server.py: 212) Added device [ni_motionControl] with args: [] kwargs: {}.
+2026-06-10 14:57:52.770 [   DEBUG] (   connectionpool.py: 241) Starting new HTTP connection (1): 192.168.1.105:8050
+2026-06-10 14:57:52.774 [   DEBUG] (   connectionpool.py: 544) http://192.168.1.105:8050 "POST /json-rpc HTTP/1.1" 200 None
+2026-06-10 14:57:52.775 [   DEBUG] (   connectionpool.py: 241) Starting new HTTP connection (1): 192.168.1.105:8050
+2026-06-10 14:57:52.778 [   DEBUG] (   connectionpool.py: 544) http://192.168.1.105:8050 "POST /json-rpc HTTP/1.1" 200 None
+2026-06-10 14:57:52.779 [    INFO] (             PS82.py:  62) Connected to Swabian 8/2 Pulse Streamer [<PS82.PS82Instrument object at 0x0000020E37324550>].
+2026-06-10 14:57:52.780 [    INFO] (           server.py: 212) Added device [pulseStreamer_driver] with args: ['192.168.1.105'] kwargs: {}.
+2026-06-10 14:57:52.796 [    INFO] (           server.py: 212) Added device [srs_driver] with args: [] kwargs: {}.
+2026-06-10 14:57:52.799 [   DEBUG] (        highlevel.py:2883) No visa library specified, trying to find alternatives.
+2026-06-10 14:57:52.799 [   DEBUG] (        highlevel.py:2887) Environment variable PYVISA_LIBRARY is unset.
+2026-06-10 14:57:52.800 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-06-10 14:57:52.805 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-06-10 14:57:52.806 [   DEBUG] (             util.py: 100) No user defined library files
+2026-06-10 14:57:52.806 [   DEBUG] (        highlevel.py:2847) The IVI implementation available
+2026-06-10 14:57:52.806 [   DEBUG] (             util.py: 142) No user defined configuration
+2026-06-10 14:57:52.811 [   DEBUG] (        highlevel.py:  97) Automatically found library files: [None, 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa32.dll', 'C:\\WINDOWS\\system32\\visa64.dll', 'C:\\WINDOWS\\system32\\visa64.dll']
+2026-06-10 14:57:52.812 [   DEBUG] (             util.py: 100) No user defined library files
+2026-06-10 14:57:52.812 [   DEBUG] (        highlevel.py:2996) Reusing ResourceManager with session 4097
+2026-06-10 14:57:52.813 [   DEBUG] (        highlevel.py: 186) viParseRsrcEx(4097, 'GPIB1::19::INSTR', 'c_ushort(1)', 'c_ushort(1)', <ctypes.c_char_Array_256 object at 0x0000020E381EBD50>, <ctypes.c_char_Array_256 object at 0x0000020E381EBDD0>, <ctypes.c_char_Array_256 object at 0x0000020E381EBE50>) -> 0
+2026-06-10 14:57:52.813 [   DEBUG] (         resource.py: 277) GPIB1::19::INSTR - opening ...
+2026-06-10 14:57:52.872 [   DEBUG] (        highlevel.py: 186) viOpen(4097, 'GPIB1::19::INSTR', <AccessModes.no_lock: 0>, 0, '<ViObject object at 0x0000020E381EBD50>') -> 0
+2026-06-10 14:57:52.872 [   DEBUG] (         resource.py: 302) GPIB1::19::INSTR - is open with session 2
+2026-06-10 14:57:52.873 [   DEBUG] (        highlevel.py: 186) viSetAttribute(2, 1073676314, 2000) -> 0
+2026-06-10 14:57:52.875 [   DEBUG] (        highlevel.py: 186) viWrite(2, b'*IDN?\r\n', 7, 'c_ulong(7)') -> 0
+2026-06-10 14:57:52.876 [   DEBUG] (     messagebased.py: 435) GPIB1::19::INSTR - reading 20480 bytes (last status <StatusCode.success_max_count_read: 1073676294>)
+2026-06-10 14:57:52.878 [   DEBUG] (        highlevel.py: 186) viRead(2, <ctypes.c_char_Array_20480 object at 0x0000020E38258450>, 20480, 'c_ulong(50)') -> 0
+2026-06-10 14:57:52.878 [    INFO] (           e8257d.py:  45) Connected to E8257D [GPIB1::19::INSTR Agilent Technologies, E8257D, MY46410278, C.04.71
+].
+2026-06-10 14:57:52.878 [    INFO] (           server.py: 212) Added device [e8257d_driver2] with args: ['GPIB1::19::INSTR'] kwargs: {}.
+2026-06-10 14:57:52.934 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 61164) with fd 1896
+2026-06-10 14:57:52.935 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 61164)
+2026-06-10 14:57:52.936 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn1' object at 0x0000020E38255610> connected.
+2026-06-10 14:58:34.718 [    INFO] (           server.py: 157) accepted ('127.0.0.1', 61183) with fd 1812
+2026-06-10 14:58:34.719 [    INFO] (           server.py: 200) welcome ('127.0.0.1', 61183)
+2026-06-10 14:58:34.720 [    INFO] (           server.py: 352) Client <rpyc.core.protocol.Connection 'conn2' object at 0x0000020E382568D0> connected.
+2026-06-10 15:01:31.196 [    INFO] (           server.py: 356) Client <rpyc.core.protocol.Connection 'conn2' object at 0x0000020E382568D0> disconnected.

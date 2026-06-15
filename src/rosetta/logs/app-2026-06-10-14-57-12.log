@@ -1,0 +1,64 @@
+2026-06-10 14:57:12.298 [    INFO] (          gateway.py: 152) Gateway connected to instrument server at "localhost:42068".
+2026-06-10 14:57:12.428 [    INFO] (          gateway.py: 152) Gateway connected to instrument server at "localhost:42067".
+2026-06-10 14:57:40.757 [    INFO] (          gateway.py: 173) Gateway disconnected from server at localhost:42067
+2026-06-10 14:57:40.761 [    INFO] (          gateway.py: 152) Gateway connected to instrument server at "localhost:42067".
+2026-06-10 14:57:42.795 [CRITICAL] (          logging.py:  32) Traceback (most recent call last):
+2026-06-10 14:57:42.795 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nspyre\instrument\gateway.py", line 193, in __getattr__
+2026-06-10 14:57:42.800 [CRITICAL] (          logging.py:  32)     return getattr(self._connection.root, attr)
+2026-06-10 14:57:42.800 [CRITICAL] (          logging.py:  32)                    ^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.800 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 751, in root
+2026-06-10 14:57:42.804 [CRITICAL] (          logging.py:  32)     self._remote_root = self.sync_request(consts.HANDLE_GETROOT)
+2026-06-10 14:57:42.804 [CRITICAL] (          logging.py:  32)                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.808 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 718, in sync_request
+2026-06-10 14:57:42.811 [CRITICAL] (          logging.py:  32)     return _async_res.value
+2026-06-10 14:57:42.811 [CRITICAL] (          logging.py:  32)            ^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.811 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\async_.py", line 106, in value
+2026-06-10 14:57:42.815 [CRITICAL] (          logging.py:  32)     self.wait()
+2026-06-10 14:57:42.815 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\async_.py", line 51, in wait
+2026-06-10 14:57:42.819 [CRITICAL] (          logging.py:  32)     self._conn.serve(self._ttl)
+2026-06-10 14:57:42.820 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 434, in serve
+2026-06-10 14:57:42.820 [CRITICAL] (          logging.py:  32)     data = self._channel.poll(timeout) and self._channel.recv()
+2026-06-10 14:57:42.824 [CRITICAL] (          logging.py:  32)                                            ^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.824 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\channel.py", line 55, in recv
+2026-06-10 14:57:42.830 [CRITICAL] (          logging.py:  32)     header = self.stream.read(self.FRAME_HEADER.size)
+2026-06-10 14:57:42.830 [CRITICAL] (          logging.py:  32)              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.830 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\stream.py", line 280, in read
+2026-06-10 14:57:42.834 [CRITICAL] (          logging.py:  32)     raise EOFError("connection closed by peer")
+2026-06-10 14:57:42.834 [CRITICAL] (          logging.py:  32) EOFError: connection closed by peer
+2026-06-10 14:57:42.834 [CRITICAL] (          logging.py:  32) 
+2026-06-10 14:57:42.838 [CRITICAL] (          logging.py:  32) During handling of the above exception, another exception occurred:
+2026-06-10 14:57:42.839 [CRITICAL] (          logging.py:  32) 
+2026-06-10 14:57:42.839 [CRITICAL] (          logging.py:  32) Traceback (most recent call last):
+2026-06-10 14:57:42.839 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\rosetta\src\rosetta\gui\app.py", line 195, in <module>
+2026-06-10 14:57:42.843 [CRITICAL] (          logging.py:  32)     main()
+2026-06-10 14:57:42.843 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\rosetta\src\rosetta\gui\app.py", line 59, in main
+2026-06-10 14:57:42.847 [CRITICAL] (          logging.py:  32)     with MyInstrumentManager() as insmgr:
+2026-06-10 14:57:42.847 [CRITICAL] (          logging.py:  32)          ^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.847 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\rosetta\src\rosetta\insmgr.py", line 7, in __init__
+2026-06-10 14:57:42.867 [CRITICAL] (          logging.py:  32)     self.register_gateway(port=42067)  # secondary inserv;  ***SSH tunnel should already exist*** to Awsch@192.168.1.95 port 42057
+2026-06-10 14:57:42.871 [CRITICAL] (          logging.py:  32)     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.871 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nspyre\instrument\manager.py", line 72, in register_gateway
+2026-06-10 14:57:42.880 [CRITICAL] (          logging.py:  32)     for gw_dev_name in gw._devs:
+2026-06-10 14:57:42.880 [CRITICAL] (          logging.py:  32)                        ^^^^^^^^
+2026-06-10 14:57:42.880 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\nspyre\instrument\gateway.py", line 210, in __getattr__
+2026-06-10 14:57:42.885 [CRITICAL] (          logging.py:  32)     return getattr(self._connection.root, attr)
+2026-06-10 14:57:42.888 [CRITICAL] (          logging.py:  32)                    ^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.888 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 751, in root
+2026-06-10 14:57:42.893 [CRITICAL] (          logging.py:  32)     self._remote_root = self.sync_request(consts.HANDLE_GETROOT)
+2026-06-10 14:57:42.896 [CRITICAL] (          logging.py:  32)                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.896 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 718, in sync_request
+2026-06-10 14:57:42.900 [CRITICAL] (          logging.py:  32)     return _async_res.value
+2026-06-10 14:57:42.904 [CRITICAL] (          logging.py:  32)            ^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.904 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\async_.py", line 106, in value
+2026-06-10 14:57:42.910 [CRITICAL] (          logging.py:  32)     self.wait()
+2026-06-10 14:57:42.910 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\async_.py", line 51, in wait
+2026-06-10 14:57:42.914 [CRITICAL] (          logging.py:  32)     self._conn.serve(self._ttl)
+2026-06-10 14:57:42.914 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\protocol.py", line 434, in serve
+2026-06-10 14:57:42.918 [CRITICAL] (          logging.py:  32)     data = self._channel.poll(timeout) and self._channel.recv()
+2026-06-10 14:57:42.922 [CRITICAL] (          logging.py:  32)                                            ^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.922 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\channel.py", line 55, in recv
+2026-06-10 14:57:42.926 [CRITICAL] (          logging.py:  32)     header = self.stream.read(self.FRAME_HEADER.size)
+2026-06-10 14:57:42.930 [CRITICAL] (          logging.py:  32)              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-06-10 14:57:42.930 [CRITICAL] (          logging.py:  32)   File "C:\Users\awsch\miniconda3\envs\nsp\Lib\site-packages\rpyc\core\stream.py", line 280, in read
+2026-06-10 14:57:42.934 [CRITICAL] (          logging.py:  32)     raise EOFError("connection closed by peer")
+2026-06-10 14:57:42.938 [CRITICAL] (          logging.py:  32) EOFError: connection closed by peer
