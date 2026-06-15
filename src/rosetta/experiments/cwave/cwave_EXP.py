@@ -3,6 +3,7 @@ import logging
 import enum
 from pathlib import Path
 from itertools import count
+import numpy as np
 
 from nspyre import DataSource
 from nspyre import InstrumentGateway
@@ -112,9 +113,9 @@ class cwaveExperiment:
                     # the GUI has asked us nicely to exit
                     return     
 
-    def cwavePLE(self, dataset:str, min_piezo:float, max_piezo:float, scan_rate:float,
-                                    num_points:int, measure_rate:float,
-                                    data_channel:str, ctr_channel:str, sampling_rate:float):
+    def cwavePLE(self, dataset:str, min_piezo:float, max_piezo:float, scan_rate:float, num_points:int, 
+                                    acq_rate:float, num_samples:int,
+                                    data_channel:str):
         """
         Get counts on DAQ chanel PFI as as the C-WAVE's OPO piezo sweeps through min_piezo (e.g. 10% of piezo range) and max_piezo (90% of piezo range).
 
@@ -133,10 +134,9 @@ class cwaveExperiment:
             max_piezo: Between 0% and 100% (kindly stay away from extremes, so realistically, between 5% and 95%) of C-WAVE's OPO piezo scan range
             scan_rate (Hz): Rate at which OPO piezo sweeps through min_piezo and max_piezo
             num_points (int): Number of points to take in PLE scan
-            measure_rate (Hz): Length of time that DAQ is asked to read data_channel; should be about 10x higher than scan_rate to prevent aliasing
+            acq_rate (Hz): Frequency at which DAQ samples data_channel
+            num_samples (int): Number of times to sample DAQ per point
             data_channel: e.g. Dev1/PFI1
-            ctr_channel: e.g. Dev1/ctr0
-            sampling_rate (Hz): Rate at which counts on data_channel are read from DAQ
         """
         
         with MyInstrumentManager() as mgr, DataSource(dataset) as cwavePLE_data:
@@ -173,9 +173,7 @@ class cwaveExperiment:
                 p0 = cwave.get_status().pdOpoPower
 
                 channel_num = int(data_channel.split("/"[1][3:])) # from "Dev1/PFI123" get 123 as an integer
-                #data = daq.readCtr_multi_internalClk(sampling_rate, int(1/measure_rate),ctrChannelNums=[channel_num])
-                data = [3.14]
-                time.sleep(1/measure_rate)
+                data = np.average(daq.readCtr_multi_internalClk(acq_rate,num_samples,ctrChannelNums=[channel_num]))
 
                 #wl1 = wlm.get_wavelength()
                 t1 = time.time()
@@ -202,12 +200,13 @@ class cwaveExperiment:
                                  'num_points': num_points,
                                  'measure_rate': measure_rate,
                                  'data_channel': data_channel,
-                                 'ctr_channel' : ctr_channel,
                                  'sampling_rate': sampling_rate,
                                 },              
                      'title': 'PLE using C-WAVE laser',
                      'xlabel': 'Wavelength (nm)',
                      'ylabel': 'Counts',
+                     'credit': 'Chloe Washabaugh, washabaugh@uchicago.edu',
+                     'time'  : time.strftime("%D %T", time.gmtime(time.time())) + " UTC",
                      'datasets':{'Time of measurement (s)' : self.ts_average,
                                  'Wavelength during measurement (nm)' : self.wls_average,
                                  'Power during measurement (W)' : self.ps_average,
@@ -219,8 +218,156 @@ class cwaveExperiment:
 
             # stop OPO from scanning continuously, set to 50% output
             cwave.stop_OPO_piezo(50)
+
+    def cwavePLElockedExperiment(self, dataset: str,
+                             wavelength_min,
+                             iterations,
+                             subscan_spacing,
+                             num_subscans,
+                             subscan_width,
+                             num_points_per_subscan,
+                             record_power,
+                             acq_rate,
+                             num_samples,
+                             SNSPD_channel,
+                             comments):
+
+        with MyInstrumentManager() as mgr, DataSource(dataset) as cwavePLElocked_data:
+            # Connect to C-Wave and DAQ
+            cwave = mgr.cwave_driver
+            cwave.connect('192.168.202.10')
+            daq = mgr.ni_photonCounting
+            if record_power==True:
+                pm  = mgr.powerMeter_driver
+                pm.set_correction_wavelength(wavelength_min) # send as nm
+                calibration_wavelength = pm.get_correction_wavelength()
+            else:
+                calibration_wavelength = None
+
+            snspd_ch = [int(SNSPD_channel[-1])]
+
+            power_data = StreamingList()
+            signal_data = StreamingList()
+
+            #wavelengths = np.linspace(wavelength_min, wavelength_max, num_points)
+            subscan_wavelengths = np.arange(wavelength_min,wavelength_min+num_subscans*subscan_spacing,subscan_spacing)
+
+            # Open pump shutter
+            #cwave.set_shutter(gtr.ShutterChannel.Pump, True)
+            
+
+            # Set wavelength close to starting point
+            
+
+            # Wait until wavelength dialing done
+
+
+            #wait_for('Waiting for WLM Reading', lambda: (not math.isnan(cwave.get_status_all().measuredWavelength)))
+            
+
+            # Enable AbsoluteLambda
+             # this is the equivalent of clcking the "AbsoluteLambda" button
+
+            
+
+            #WLM_WAVELENGTH = cwave.get_status().wlmSetpoint
+            #print('Stabilizing to {:.7f}nm'.format(WLM_WAVELENGTH))
+
+            # for loop
+            for i in range(iterations):
+                for j in range(len(subscan_wavelengths)):
+                    subsection_wavelength = subscan_wavelengths[j].item()
+
+                    # Dial the temperature of the OPO crystal
+                    cwave.set_stabilize_wlm(False)
+                    cwave.set_lambda(subsection_wavelength, False) # False means no SHG
+
+                    # wait for device to finish dialing (poll for get_dial_done() == True)
+                    wait_for('Waiting for device to dial wavelength', cwave.get_dial_done)
+                    # let the device stabilize for a few seconds
+                    wait(2)
+
+                    current_wavelength = cwave.get_status().measuredWavelength
+                    cwave.set_stabilize_wlm(True)
+                    wavelengths = np.linspace(current_wavelength, current_wavelength+subscan_width, num_points_per_subscan)
+
+                    signal_empty = np.empty(num_points_per_subscan)
+                    signal_empty[:] = np.nan
+                    signal_data.append(np.stack([wavelengths, signal_empty]))
+
+                    power_empty = np.empty(num_points_per_subscan)
+                    power_empty[:] = np.nan
+                    power_data.append(np.stack([wavelengths, power_empty]))
+
+                    for w, wavelength in enumerate(wavelengths):
+                        wavelength = wavelength.item()
+                        cwave.set_wlm_setpoint(wavelength)
+                        print('Stabilizing to {:.7f}nm'.format(wavelength))
+                        time.sleep(2)
+                        signal = np.average(daq.readCtrs_multi_internalClk(acq_rate, num_samples, snspd_ch))
+                        if record_power==True:
+                            current_optical_power = pm.get_power() * 1e3 #mW
+                        else:
+                            current_optical_power = 1.0
+                        signal_data[-1][1][w] = signal
+                        signal_data.updated_item(-1)
+                        power_data[-1][1][w] = current_optical_power #mW
+                        power_data.updated_item(-1)
+                        time.sleep(0.5)
+
+                                            # save the current data to the data server.
+                        cwavePLElocked_data.push({'params': {'wavelength_min_nm': wavelength_min,
+                                                    'iterations': iterations,
+                                                    'subscan_spacing_nm':subscan_spacing,
+                                                    'num_subsections': num_subscans,
+                                                    'subscan_width_nm':subscan_width,
+                                                    'num_points_per_subscan': num_points_per_subscan,
+                                                    'record_power' : record_power,
+                                                    'power_meter_calibration_wavelength': calibration_wavelength,
+                                                    'acq_rate' : acq_rate,
+                                                    'num_samples' :num_samples,
+                                                    'SNSPD_channel': SNSPD_channel,
+                                                    'comments': comments},
+                                        'title': 'Photoluminescence Excitation',
+                                        'xlabel': 'Wavelength (nm)',
+                                        'ylabel': 'Counts per {t:.3}s'.format(t=1/acq_rate),
+                                        'credit': 'Chloe Washabaugh, washabaugh@uchicago.edu',
+                                        'time'  : time.strftime("%D %T", time.gmtime(time.time())) + " UTC",
+                                        'datasets': {'signal' : signal_data,
+                                                     'power'  : power_data,}
+                        })
+                        if experiment_widget_process_queue(self.queue_to_exp) == 'stop':
+                            # the GUI has asked us nicely to exit
+                            return
+                    time.sleep(0.5)
+
+
+def wait_for(message: str, condition) -> None:
+    '''Wait for a condition as lambda while giving console feedback'''
+    char_list = ['|', '/', '-', '\\']
+    char_index = 0
+    last_len = 0
+    while not condition():
+        output_msg = '\r[{}] {}'.format(
+            char_list[char_index],
+            message
+        )
+        print(output_msg.ljust(last_len, ' '), end='')
+        last_len = len(output_msg)
+        char_index = (char_index + 1) % len(char_list)
+        time.sleep(0.1)
+    print(''.ljust(last_len, ' '), end='\r')
+    print('[{}] {}'.format('X', message))
+
+def wait(duration: float):
+    '''Wait for certain time while giving console feedback'''
+    start_time = time.perf_counter()
+    wait_for('Waiting for {} seconds'.format(duration),
+             lambda: time.perf_counter() - start_time >= duration
+            )            
                 
 
 if __name__ == '__main__':
     exp = cwaveExperiment()
-    exp.cwaveTrace(1,10,'cwaveTrace')
+    #exp.cwaveTrace(1,10,'cwaveTrace')
+    #exp.cwavePLElockedExperiment('cwavePLElocked',1050.5,1050.15,31,1,0.03,10,10,"/Dev1/PFI1","none")

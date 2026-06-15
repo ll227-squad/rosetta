@@ -30,3 +30,8 @@ class nidaqAnalogTasks():
             task.ai_channels.add_ai_voltage_chan(AI_channel)
             data = task.read()
             return(data)
+        
+    def writeAO(self, AO_channel, voltage):
+        with nidaqmx.Task() as task:
+            task.ao_channels.add_ao_voltage_chan(AO_channel)
+            task.write(float(voltage))

@@ -196,6 +196,101 @@ class cwavePLEWidget(ExperimentWidget):
         fun_name (str): name of the function within cls to run. All the values from the ParamsWidget will be passed as keyword arguments to this function
         title (str, optional): Window title"""
 
+class cwavePLElockedWidget(ExperimentWidget):
+    def __init__(self):
+        params_config = {
+            'dataset' : {
+                'display_text' : 'Dataset Name',
+                'widget' : QtWidgets.QLineEdit('cwavePLElocked')
+            },
+            'wavelength_min': {
+                'display_text': 'Ideal Start Wavelength (nm)',
+                'widget': SpinBox(
+                    value=1050.5,
+                    suffix='nm',
+                    #siPrefix=True,
+                    bounds=(1000, 1500),
+                    dec=True,
+                ),
+            },
+            'iterations': {
+                'display_text': 'Number of Experiment Repeats',
+                'widget': SpinBox(
+                    value=1, 
+                    int=True, 
+                    bounds=(1, None), 
+                    dec=True),
+            },
+            'subscan_spacing': {
+                'display_text': 'Subscan Spacing (nm)',
+                'widget': SpinBox(
+                    value=0.01,
+                    suffix='nm',
+                    #siPrefix=True,
+                    bounds=(0.001, 1),
+                    dec=True,
+                ),
+            },
+            'num_subscans': {
+                'display_text': 'Number of Subscans',
+                'widget': SpinBox(
+                    value=10, 
+                    int=True, 
+                    bounds=(1, None), 
+                    dec=True),
+            },
+            'subscan_width': {
+                'display_text': 'Subscan Width (nm)',
+                'widget': SpinBox(
+                    value=0.03,
+                    suffix='nm',
+                    #siPrefix=True,
+                    bounds=(0.001, 0.1),
+                    dec=True,
+                ),
+            },
+            'num_points_per_subscan': {
+                'display_text': 'Number of Points in Subscan',
+                'widget': SpinBox(
+                    value=30, 
+                    int=True, 
+                    bounds=(1, None), 
+                    dec=True),
+            },
+            'record_power' : {
+                'display_text':'Record Power?',
+                'widget': QtWidgets.QCheckBox()
+            },
+            'acq_rate': {
+                'display_text': 'DAQ Sampling Rate (Hz)',
+                'widget': SpinBox(
+                    value=10, 
+                    bounds=(1e-6, 10e3), 
+                    dec=True),
+            },
+            'num_samples': {
+                'display_text': 'DAQ Samples per Point',
+                'widget': SpinBox(
+                    value=10,
+                    int=True, 
+                    bounds=(1, 10e3), 
+                    dec=True),
+            },
+            'SNSPD_channel' : {
+                'display_text': 'DAQ PFI Channel For SNSPD',
+                'widget': QtWidgets.QLineEdit('/Dev1/PFI1')
+            },
+            'comments' : {
+                'display_text' : 'Comments',
+                'widget' : QtWidgets.QLineEdit()
+            },
+        }
+        super().__init__(params_config, 
+                        module =    rosetta.experiments.cwave.cwave_EXP,
+                        cls =      'cwaveExperiment',
+                        fun_name = 'cwavePLElockedExperiment',
+                        title=     'PLE with locked CWAVE')
+
 def process_CWAVEPLE_data(sink: DataSink):
     processed_dataset_time = []
     processed_dataset_wavelength = []
@@ -220,6 +315,15 @@ def process_CWAVEPLE_data(sink: DataSink):
     sink.datasets['normalizedcountsvswavelength_processed'] = processed_dataset_normalized_signal
 
 
+def process_CWAVEPLElocked_data(sink: DataSink):
+    power_normalized_signal= []
+    for s,_ in enumerate(sink.datasets['signal']):
+        ws = sink.datasets['signal'][s][0]
+        sig = sink.datasets['signal'][s][1]
+        ps = sink.datasets['power'][s][1]
+        power_normalized_signal.append(np.stack([ws, sig / ps]))
+    sink.datasets['power_normalized_signal'] = power_normalized_signal
+
 class FlexLinePlotWidgetWithCWAVEPLEDefaults(FlexLinePlotWidget):
     """Add some default settings to the FlexSinkLinePlotWidget."""
     def __init__(self):
@@ -242,6 +346,31 @@ class FlexLinePlotWidgetWithCWAVEPLEDefaults(FlexLinePlotWidget):
         legend.setOffset((-10, -50))
 
         self.datasource_lineedit.setText('CWAVEPLE')
+
+class FlexLinePlotWidgetWithCWAVEPLElockedDefaults(FlexLinePlotWidget):
+    """Add some default settings to the FlexSinkLinePlotWidget."""
+    def __init__(self):
+        super().__init__(data_processing_func = process_CWAVEPLElocked_data)
+        # create some default signal plots
+        self.add_plot(name = 'Counts vs Wavelength',
+                      series='signal',
+                      scan_i='',
+                      scan_j='',
+                      processing='Append')
+        
+        self.add_plot(name = 'Counts vs Wavelength Power Normalized',
+                series='power_normalized_signal',
+                scan_i='',
+                scan_j='',
+                processing='Append')
+
+        self.hide_plot('Counts vs Wavelength Power Normalized')
+        # retrieve legend object
+        legend = self.line_plot.plot_widget.addLegend()
+        # set the legend location
+        legend.setOffset((-10, -50))
+
+        self.datasource_lineedit.setText('cwavePLElocked')
 
 ################################################################################################################
 ################################################################################################################

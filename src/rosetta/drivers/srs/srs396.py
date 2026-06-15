@@ -17,7 +17,7 @@ import socket
 
 class SRS396():
 
-    def __init__(self, ip="192.168.1.113", port=5025, host='127.0.0.1', serialNumber=None, sock=None):
+    def __init__(self, ip="192.168.1.114", port=5025, host='127.0.0.1', serialNumber=None, sock=None):
         self.serialNumber = serialNumber
         self.ip = ip
         self.port = port
@@ -30,7 +30,7 @@ class SRS396():
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         else:
             self.sock = self.sock
-        self.sock.connect(("192.168.1.113", 5025))
+        self.sock.connect((self.ip, self.port))
         print(f'Connection established.' )
         return(self)
 
@@ -135,7 +135,7 @@ class SRS396():
         return(self.read())
 
     def setLfToggle(self, value):
-        val = 'ENBL{:s};'.format(value)
+        val = 'ENBL{:.0f};'.format(value)
         self.sock.send(val.encode())
 
     def getLfOffset(self):

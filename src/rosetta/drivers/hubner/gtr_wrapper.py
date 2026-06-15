@@ -31,3 +31,7 @@ class Gtr_wrapper(gtr.Gtr):
 
         self.set_piezo_mode(channel, mode)
         self.set_piezo_manual_output(channel, piezo)
+
+    def get_status_all(self):
+        data =  self.get_status()
+        return data

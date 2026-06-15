@@ -17,16 +17,29 @@ class nidaqPhotonCounter():
         self.APDchannel = '/Dev1/PFI11'
         self.SNSPDchannel = '/Dev1/PFI4'
         self.SGchannel = '/Dev1/PFI1'
+        self.TESTchannel = '/Dev1/PFI3'
         self.pulseChannelsDict = {11: self.APDchannel, 
                                   4 : self.SNSPDchannel, 
+                                  3 : self.TESTchannel,
                                   1 : self.SGchannel, }
 
     def __enter__(self):
+        self.read_tasks = []
+        self.reader_streams = []
         return self
     
 
     def __exit__(self, *args):
         pass
+        """
+        if len(self.read_tasks) != 0:  # in case the DAQ object was killed before the reading was over, close and destroy all read tasks
+            for read_task, reader_stream in zip(self.read_tasks, self.reader_streams):
+                # print('in if')
+                read_task.stop()
+                read_task.close()
+                self.read_tasks.remove(read_task)
+                self.reader_streams.remove(reader_stream)
+                """
 
     def readCtrs_multi_internalClk(self, acqRate, numSamples:int, ctrChannelNums=[11,1]):
         """ Reads specified counter channels for a given period, a designated number of times, based on software timing (internal clock)"""
@@ -69,7 +82,6 @@ class nidaqPhotonCounter():
 
                 # load tasks to be quickly run together later
                 ctrTask.control(TaskMode.TASK_COMMIT) # alternative to task.start()
-                #ctrTask.start()
                 ctrTasks.append(ctrTask)
 
             # Start counter tasks
@@ -89,8 +101,62 @@ class nidaqPhotonCounter():
                                                      timeout = numSamples*period + 1)#s overhead
                 # calculate the difference in counts between each sampling period
                 all_counts.append(np.diff(ctrRawCts))
+                #all_counts.append(ctrRawCts)
 
             return np.array(all_counts).tolist()
+        
+    def readCtrs_singleChannel_externalTrig_externalClk(self,
+                                                             num_samples,
+                                                             ctsChannel='/Dev1/PFI1',
+                                                             trigChannel = '/Dev1/PFI2',
+                                                             clkChannel =  '/Dev1/PFI3',):
+            start_time = time.time()
+            all_counts = [] 
+            ctrTasks = []
+            with ExitStack() as stack:
+                ctrTask = stack.enter_context(nidaqmx.Task())
+                # Counting Task #
+                self.read_tasks.append(ctrTask)
+                ctrTask.ci_channels.add_ci_count_edges_chan('/Dev1/ctr0')
+                ctrTask.ci_channels.all.ci_count_edges_term = '/Dev1/PFI1'
+                ctrTask.timing.cfg_samp_clk_timing(
+                                                                20e6,       # minimum time bin that DAQ will expect from source
+                                                    source ='/Dev1/PFI3', # TTL pulses from Swabian telling when to create new time bin on ctr0
+                                                    active_edge = nidaqmx.constants.Edge.RISING,
+                                                    sample_mode = nidaqmx.constants.AcquisitionType.FINITE,
+                                                    samps_per_chan = num_samples # number of TTL pulses to expect from Swabian
+                )
+
+                ctrTask.triggers.arm_start_trigger.trig_type = TriggerType.DIGITAL_EDGE
+                ctrTask.triggers.arm_start_trigger.dig_edge_edge = Edge.RISING
+                ctrTask.triggers.arm_start_trigger.dig_edge_src = '/Dev1/PFI2'
+                #ctrTask.control(TaskMode.TASK_COMMIT)
+
+                self.reader_streams.append(nidaqmx.stream_readers.CounterReader(ctrTask.in_stream))
+                ctrTasks.append(ctrTask)
+
+                ctrTask.start()
+
+                for readerStream in self.reader_streams:
+                    ctrRawCts = np.zeros(num_samples, dtype=np.uint32)
+                    # Read counts out of the buffer
+                    readerStream.read_many_sample_uint32(ctrRawCts,
+                                                            number_of_samples_per_channel=nidaqmx.constants.READ_ALL_AVAILABLE,
+                                                            timeout = 10)#s overhead
+                    # calculate the difference in counts between each sampling period
+                    all_counts.append(np.diff(ctrRawCts))
+                    #all_counts.append(ctrRawCts)
+                    self.reader_streams.remove(readerStream)
+
+                ctrTask.control(TaskMode.TASK_STOP)
+                ctrTask.control(TaskMode.TASK_UNRESERVE)
+                #ctrTask.stop()
+                #ctrTask.close()
+
+                data = np.array(all_counts).tolist()
+                signal = data[0][0::4]
+                background = data[0][2::4]
+                return(np.array(all_counts).tolist())
         
     def readCtrs_single_internalClk(self, acqRate, ctrChannelNums=[11,1]):
         # run readCtrs_multi_internalClk
@@ -99,7 +165,9 @@ class nidaqPhotonCounter():
         return data_reformed
         
 if __name__=='__main__':
-    daq = nidaqPhotonCounter()
-    #print(daq.readCtrs_multi_internalClk(acqRate=5,numSamples=10))
-    counts = daq.readCtrs_single_internalClk(acqRate=1)
-    print(counts)
+    with nidaqPhotonCounter() as daq:
+        #print(daq.readCtrs_multi_internalClk(acqRate=5,numSamples=10))
+        #counts = daq.readCtrs_single_internalClk(acqRate=1)
+        #counts = daq.avgCtrs_multiChannel_externalTrig(1000,49,'falling',[1,3],'Dev1/PFI2')
+        counts = daq.readCtrs_singleChannel_externalTrig_externalClk(12)
+        print(counts)

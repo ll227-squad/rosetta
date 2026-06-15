@@ -27,7 +27,19 @@ class PS82Instrument:
     def __init__(self, address="192.168.1.105"):
 
         self.address = address 
-        #self.voltage_sp_ch0 = 0
+
+        self.digital_chs = { 'rf_switch_EN'      : 0, 
+                             'rf_switch_CTRL'    : 1, 
+                             'daq_trigger'       : 2, 
+                             'daq_clock'         : 3, 
+                             'aom_IR'            : 4,
+                             'Switch5'           : 5,
+                             'Switch6'           : 6,
+                             'Switch7'           : 7,} 
+
+        self.analog_chs =  { 'analog1'           : 0,
+                             'analog2'           : 1,}
+
 
     def __enter__(self):
         self.open()
@@ -139,10 +151,95 @@ class PS82Instrument:
         '''Main workhorse function when using Swab thru an InstrumentGateway. Obtains the desired sequence and starts streaming it'''
         self.ps.stream(obtain(seq))
 
+    def visualize(self, seq):
+        seq.plot()
+
     
     ###############################################################################################################
+    ################################### Pulses ####################################################################
     ###############################################################################################################
+    ###############################################################################################################
+
+    def cwODMRmwON(self, t_on):
+        """All times should be passed to this function in ns"""
+        seq = self.ps.createSequence()
+
+        patt0 = [(t_on, 0)]
+        patt1 = [(t_on, 1)]
+
+        seq.setDigital(self.digital_chs['rf_switch_EN'], patt0)
+        seq.setDigital(self.digital_chs['rf_switch_CTRL'], patt1)
+
+        return seq
+        
+
+    def cwODMRmwOFF(self, t_off):
+        """All times should be passed to this function in ns"""
+        seq = self.ps.createSequence()
+
+        patt0 = [(t_off, 0)]
+
+        seq.setDigital(self.digital_chs['rf_switch_EN'], patt0)
+        seq.setDigital(self.digital_chs['rf_switch_CTRL'], patt0)
+
+        return seq
+
+    def rabi_diff(self, t_init, t_mw_delay, t_rabi, t_readout_delay, t_readout, t_rabi_max, clk_width, clk_buffer):
+        """All times should be passed to this function in ns"""
+
+        t_init = obtain(t_init)
+        t_mw_delay = obtain(t_mw_delay)
+        t_rabi = obtain(t_rabi)
+        t_readout_delay = obtain(t_readout_delay)
+        t_readout = obtain(t_readout)
+        t_rabi_max = obtain(t_rabi_max)
+        clk_width = obtain(clk_width)
+        clk_buffer = obtain(clk_buffer)
+        t_readout2 = t_readout/2
+
+        seq = self.ps.createSequence()
+
+        patt0 = [(2*(t_init+t_mw_delay+t_rabi+t_readout_delay+t_readout+t_rabi_max-t_rabi), 0)]
+        patt1 = [(t_init+t_mw_delay, 0),
+                 (t_rabi, 1),
+                 (t_readout_delay+t_readout+t_rabi_max-t_rabi+t_init+t_mw_delay, 0),
+                 (t_rabi, 0),
+                 (t_readout_delay+t_readout+t_rabi_max-t_rabi, 0)]
+        patt4 = [(t_init, 1),
+                 (t_mw_delay+t_rabi+t_readout_delay, 0),
+                 (t_readout, 1),
+                 (t_rabi_max-t_rabi, 0),
+                 (t_init, 1),
+                 (t_mw_delay+t_rabi+t_readout_delay, 0),
+                 (t_readout, 1),
+                 (t_rabi_max-t_rabi, 0)]
+        patt2 = [(clk_buffer, 0),
+                 (clk_width, 1),
+                 (t_init-clk_buffer-clk_width+t_mw_delay+t_rabi+t_readout_delay+t_readout+t_rabi_max-t_rabi+t_init+t_mw_delay+t_rabi+t_readout_delay+t_readout+t_rabi_max-t_rabi, 0)]
+        patt3 = [(t_init+t_mw_delay+t_rabi+t_readout_delay+clk_buffer, 0),
+                 (clk_width, 1),
+                 (t_readout-clk_width-clk_buffer-clk_buffer, 0),
+                 (clk_width, 1),
+                 (clk_buffer + t_rabi_max-t_rabi+t_init+t_mw_delay+t_rabi+t_readout_delay+clk_buffer, 0),
+                 (clk_width, 1),
+                 (t_readout-clk_width-clk_buffer-clk_buffer,0),
+                 (clk_width, 1),
+                 (clk_buffer+t_rabi_max-t_rabi, 0)]
+
+
+        seq.setDigital(self.digital_chs['rf_switch_EN'], patt0)
+        seq.setDigital(self.digital_chs['rf_switch_CTRL'], patt1)
+        seq.setDigital(self.digital_chs['daq_trigger'], patt2)
+        seq.setDigital(self.digital_chs['daq_clock'], patt3)
+        seq.setDigital(self.digital_chs['aom_IR'], patt4)
     
+        return seq
+
+
+    ###############################################################################################################
+    ###############################################################################################################
+    ###############################################################################################################
+    ###############################################################################################################
 if __name__ == '__main__':
     with PS82Instrument() as pulse_streamer:
         print(pulse_streamer.idn())
@@ -150,8 +247,7 @@ if __name__ == '__main__':
         #pulse_streamer.reset_streamer()
         #pulse_streamer.reboot()
         print(pulse_streamer.streaming_state(True))
-        pulse_streamer.test_sequence()
-        while True:
-            print(pulse_streamer.streaming_state(True))
-            time.sleep(0.5)
+        seq = pulse_streamer.rabi_diff(500000000,100000,500000000,100000,1000000000,600000000, 1000,1000)
+        pulse_streamer.runSequenceInfinitely(seq)
+        pulse_streamer.visualize(seq)
 

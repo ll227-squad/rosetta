@@ -10,7 +10,7 @@ from pyvisa import ResourceManager
 logger = logging.getLogger(__name__)
 
 # Show additional print statements for setters if True
-output = True
+output = False
 
 class PM100USBInstrument:
     def __init__(self, address):
@@ -72,7 +72,7 @@ class PM100USBInstrument:
     
     #################################### SETTERS ########################################################
 
-    def set_correction_wavlength(self, wavelength):
+    def set_correction_wavelength(self, wavelength):
         """
         Args:
                 wavelength (float): correction wavlength of power meter
@@ -100,5 +100,5 @@ if __name__ == '__main__':
     print(f'-- Sensor identification: {dev.get_idn_sensor()}')
     print(f'-- Correction wavelength: {dev.get_correction_wavelength()}nm')
     print(f'-- Current power: {dev.get_power()}{dev.get_units()}')
-    dev.set_correction_wavlength(675.0)
+    dev.set_correction_wavelength(1010.0)
     dev.set_units('W')
